@@ -6,5 +6,6 @@ return {
                 theme = "dracula"
             }
         })
+        vim.opt.guifont = "Hack Nerd Font:h12"
     end
 }
