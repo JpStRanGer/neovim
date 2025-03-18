@@ -24,6 +24,5 @@ return {
     },
     config = function()
         vim.keymap.set('n', '<C-n>', ':Neotree filesystem reveal left<CR>')
-        vim.opt.guifont = "Hack Nerd Font:h12"
     end
 }
