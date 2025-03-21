@@ -25,6 +25,17 @@ vim.o.pumblend = 20
 vim.keymap.set("n", "<C-t>", "<cmd>ToggleTerm<CR>", { noremap = true, silent = true })
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true }) -- Exit terminal mode with Esc
 
+
+-- Navigate vim panes better
+vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
+vim.keymap.set('n', '<c-j>', ':wincmd j<CR>')
+vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
+vim.keymap.set('n', '<c-l>', ':wincmd l<CR>')
+
+
+vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
+vim.wo.number = true
+
 --TELESCOPE
 -- local builtin = require("telescope.builtin")
 -- vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = "Telescope find files" })

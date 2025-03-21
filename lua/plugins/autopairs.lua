@@ -7,3 +7,4 @@ return {
 		-- this is equivalent to setup({}) function
 	},
 }
+
