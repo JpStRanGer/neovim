@@ -1,61 +1,77 @@
+
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 return {
-	{
-		"williamboman/mason.nvim",
-		config = function()
-			require("mason").setup()
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		config = function()
-			require("mason-lspconfig").setup({
-				ensure_installed = { "clangd", "lua_ls", "ts_ls", "pylsp", "bashls" },
-			})
-		end,
-	},
-	{
-		"neovim/nvim-lspconfig",
-		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-			local lspconfig = require("lspconfig")
+    -- Mason package manager
+    {
+        "williamboman/mason.nvim",
+        config = function()
+            require("mason").setup()
+        end,
+    },
 
-			-- 2. configure each language server
-			lspconfig.clangd.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.ts_ls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.pylsp.setup({
-				capabilities = capabilities,
-				settings = {
-					pylsp = {
-						plugins = {
-							pycodestyle = { maxLineLength = 100 },
-							autopep8 = { enabled = true },
-							mypy = { enabled = true },
-							rope = { enabled = true },
-							black = { enabled = true },
-							ruff = { enabled = true },
-						},
-					},
-				},
-			})
-			lspconfig.bashls.setup({
-				capabilities = capabilities,
-			})
+    -- Mason integration with lspconfig
+    {
+        "williamboman/mason-lspconfig.nvim",
+        dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+        config = function()
+            require("mason-lspconfig").setup({
+                ensure_installed = {
+                    "clangd",
+                    "lua_ls",
+                    -- "tsserver", -- Merk: tsserver, ikke ts_ls
+                    "pylsp",
+                    "bashls",
+                },
+                handlers = {
+                    -- Default handler
+                    function(server_name)
+                        require("lspconfig")[server_name].setup({
+                            capabilities = capabilities,
+                        })
+                    end,
 
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
-			-- vim.keymap.set("n", "gd", vim.lsp.buf.definition, {})
-			vim.keymap.set("n", "gd", function()
-				require("telescope.builtin").lsp_definitions({
-					jump_type = "never",
-				})
-			end, { desc = "Go to Definition (Telescope)" })
-			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, {})
-		end,
-	},
+                    -- Custom handler for Python LSP
+                    pylsp = function()
+                        require("lspconfig").pylsp.setup({
+                            capabilities = capabilities,
+                            settings = {
+                                pylsp = {
+                                    plugins = {
+                                        pycodestyle = { maxLineLength = 100 },
+                                        autopep8 = { enabled = true },
+                                        mypy = { enabled = true },
+                                        rope = { enabled = true },
+                                        black = { enabled = true },
+                                        ruff = { enabled = true },
+                                    },
+                                },
+                            },
+                        })
+                    end,
+                },
+            })
+        end,
+    },
+
+    -- Core LSP settings and keymaps
+    {
+        "neovim/nvim-lspconfig",
+        config = function()
+            local builtin = require("telescope.builtin")
+
+            vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover info" })
+            vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "Go to Definition (Telescope)" })
+            vim.keymap.set("n", "gp", vim.lsp.buf.declaration, { desc = "Go to Declaration" })
+
+            vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+            vim.keymap.set("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
+
+            vim.keymap.set("n", "<leader>sf", function()
+                builtin.lsp_document_symbols({
+                    symbols = { "Function", "Method" },
+                })
+            end, { desc = "Search Functions" })
+        end,
+    },
 }

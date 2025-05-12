@@ -23,7 +23,6 @@ return {
 				bg = "#3c3836", -- Darker background
 				bold = true,
 			})
-
 		end,
 	},
 	{

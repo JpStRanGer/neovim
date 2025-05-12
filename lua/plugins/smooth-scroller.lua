@@ -1,5 +1,7 @@
 return {
     {
+        --- Smoth-scoller 
+        ---
         "declancm/cinnamon.nvim",
         version = "*", -- use latest release
         opts = {

@@ -1,8 +1,20 @@
 -- Basic settings
-vim.cmd("set number")
-vim.cmd("set relativenumber")
+-- vim.cmd("set number")
+vim.o.number = true
+-- vim.cmd("set relativenumber")
+vim.o.relativenumber = true
 vim.cmd("syntax on")
-vim.cmd("set clipboard=unnamed,unnamedplus")
+-- vim.cmd("set clipboard^=unnamed,unnamedplus")
+vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
+
+-- Automatically reload changed files
+vim.opt.autoread = true
+
+--------------------------------------------------------------------------------
+-- Window Splits
+--------------------------------------------------------------------------------
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
 -- vim.o.clipboard = "unnamedplus"
 -- Enable mouse (helps with selection in many terminals)
@@ -28,7 +40,7 @@ vim.keymap.set("n", "<C-t>", "<cmd>ToggleTerm<CR>", { noremap = true, silent = t
 vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true }) -- Exit terminal mode with Esc
 
 
--- Navigate vim panes better
+-- Navigate vim panes better 
 vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
 vim.keymap.set('n', '<c-j>', ':wincmd j<CR>')
 vim.keymap.set('n', '<c-h>', ':wincmd h<CR>')
