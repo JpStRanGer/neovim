@@ -5,6 +5,7 @@ return {
     -- Mason package manager
     {
         "williamboman/mason.nvim",
+        version = "1.*",
         config = function()
             require("mason").setup()
         end,
@@ -13,6 +14,7 @@ return {
     -- Mason integration with lspconfig
     {
         "williamboman/mason-lspconfig.nvim",
+        version = "1.*",
         dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
         config = function()
             require("mason-lspconfig").setup({
