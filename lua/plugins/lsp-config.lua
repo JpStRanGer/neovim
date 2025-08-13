@@ -21,7 +21,6 @@ return {
                 ensure_installed = {
                     "clangd",
                     "lua_ls",
-                    -- "tsserver", -- Merk: tsserver, ikke ts_ls
                     "pylsp",
                     "bashls",
                 },
@@ -30,6 +29,23 @@ return {
                     function(server_name)
                         require("lspconfig")[server_name].setup({
                             capabilities = capabilities,
+                        })
+                    end,
+
+                    -- Custom handler for clangd with refactoring support
+                    clangd = function()
+                        require("lspconfig").clangd.setup({
+                            capabilities = capabilities,
+                            cmd = {
+                                "clangd",
+                                "--background-index",
+                                "--cross-file-rename",
+                                "--function-arg-placeholders",
+                                "--header-insertion=iwyu",
+                                "--completion-style=detailed",
+                                "--all-scopes-completion",
+                                "--pch-storage=memory",
+                            },
                         })
                     end,
 
@@ -67,7 +83,21 @@ return {
             vim.keymap.set("n", "gp", vim.lsp.buf.declaration, { desc = "Go to Declaration" })
 
             vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
-            vim.keymap.set("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
+            -- vim.keymap.set("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
+            
+            -- Visual mode code action for extracting if blocks
+            vim.keymap.set("v", "<leader>ca", function()
+                vim.lsp.buf.code_action({
+                    context = {
+                        only = { "refactor.extract" },
+                    },
+                    range = {
+                        ['start'] = vim.api.nvim_buf_get_mark(0, '<'),
+                        ['end'] = vim.api.nvim_buf_get_mark(0, '>'),
+                    }
+                })
+            end, { desc = "Code Action (Visual) - Extract Function" })
+
 
             vim.keymap.set("n", "<leader>sf", function()
                 builtin.lsp_document_symbols({
