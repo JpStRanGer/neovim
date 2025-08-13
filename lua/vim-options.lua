@@ -1,62 +1,44 @@
--- Basic settings
--- vim.cmd("set number")
-vim.o.number = true
--- vim.cmd("set relativenumber")
-vim.o.relativenumber = true
+-- General settings
 vim.cmd("syntax on")
--- vim.cmd("set clipboard^=unnamed,unnamedplus")
-vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
-
--- Automatically reload changed files
+vim.opt.number = true
+vim.opt.relativenumber = true
 vim.opt.autoread = true
+vim.opt.clipboard:append({"unnamed", "unnamedplus"})
 
---------------------------------------------------------------------------------
--- Window Splits
---------------------------------------------------------------------------------
+-- UI
+vim.opt.mouse = "a"
+vim.opt.winblend = 20
+vim.opt.pumblend = 20
+vim.opt.guifont = "Hack Nerd Font:h12"
+
+-- Splits
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
--- vim.o.clipboard = "unnamedplus"
--- Enable mouse (helps with selection in many terminals)
-vim.cmd("set mouse=a")
-
-vim.cmd("set expandtab")
-vim.cmd("set tabstop=2")
-vim.cmd("set softtabstop=2")
-vim.cmd("set shiftwidth=4")
+-- Indentation
+vim.opt.expandtab = true
+vim.opt.tabstop = 2
+vim.opt.softtabstop = 2
+vim.opt.shiftwidth = 4
 vim.wo.wrap = true
 vim.wo.linebreak = true
-vim.wo.list = false -- extra option I set in addition to the ones in your question
+vim.wo.list = false
+
+-- Leader keys
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-vim.o.winblend = 20
-vim.o.pumblend = 20
+-- Folding: open folds by default and show fold column
+vim.opt.foldcolumn = "1"
+vim.opt.foldlevel = 99
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
 
--- Key bindings
--------------------------
---ToggleTerm
+-- Key mappings
 vim.keymap.set("n", "<C-t>", "<cmd>ToggleTerm<CR>", { noremap = true, silent = true })
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true }) -- Exit terminal mode with Esc
-
-
--- Navigate vim panes better 
-vim.keymap.set('n', '<C-k>', ':wincmd k<CR>')
-vim.keymap.set('n', '<C-j>', ':wincmd j<CR>')
-vim.keymap.set('n', '<C-h>', ':wincmd h<CR>')
-vim.keymap.set('n', '<C-l>', ':wincmd l<CR>')
-
-
-vim.keymap.set('n', '<leader>h', ':nohlsearch<CR>')
-vim.wo.number = true
-
---TELESCOPE
--- local builtin = require("telescope.builtin")
--- vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = "Telescope find files" })
--- vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
--- vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
--- vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
-
--- vim.keymap.set("n", "<leader>gr", :OpenReferencesInUiSelect)
-
-vim.opt.guifont = "Hack Nerd Font:h12"
+vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
+vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>")
+vim.keymap.set("n", "<C-j>", "<cmd>wincmd j<CR>")
+vim.keymap.set("n", "<C-h>", "<cmd>wincmd h<CR>")
+vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>")
+vim.keymap.set("n", "<leader>h", "<cmd>nohlsearch<CR>")
