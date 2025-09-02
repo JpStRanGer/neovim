@@ -1,3 +1,18 @@
+-- Normalize buffer numbers for LSP requests. Some plugins pass
+-- `vim.api.nvim_get_current_buf` directly which results in "bufnr:
+-- expected number, got function" when the LSP client makes a request.
+local client = require("vim.lsp.client")
+local orig_request = client.request
+client.request = function(self, method, params, handler, bufnr)
+    if type(bufnr) == "function" then
+        bufnr = bufnr()
+    end
+    if type(bufnr) ~= "number" then
+        bufnr = vim.api.nvim_get_current_buf()
+    end
+    return orig_request(self, method, params, handler, bufnr)
+end
+
 return {
     -- {
     --     "git@github.com:hrsh7th/cmp-nvim-lua.git",
@@ -9,30 +24,7 @@ return {
     -- {
     --     "hrsh7th/cmp-buffer",
     -- },
-    {
-        "hrsh7th/cmp-nvim-lsp",
-        config = function()
-            -- Ensure that LSP requests use the numeric buffer id.
-            -- Some setups accidentally pass the `vim.api.nvim_get_current_buf`
-            -- function itself which triggers "bufnr: expected number, got function".
-            local source = require("cmp_nvim_lsp.source")
-            local old_request = source._request
-            source._request = function(self, method, params, callback)
-                params = params or {}
-                params.context = params.context or {}
-                -- Resolve the buffer number before forwarding the request.
-                local bufnr = params.context.bufnr
-                if type(bufnr) == "function" then
-                    bufnr = bufnr()
-                end
-                if type(bufnr) ~= "number" then
-                    bufnr = vim.api.nvim_get_current_buf()
-                end
-                params.context.bufnr = bufnr
-                return old_request(self, method, params, callback)
-            end
-        end,
-    },
+    { "hrsh7th/cmp-nvim-lsp" },
     {
         "L3MON4D3/LuaSnip",
         dependencies = {
