@@ -21,7 +21,14 @@ return {
                 params = params or {}
                 params.context = params.context or {}
                 -- Resolve the buffer number before forwarding the request.
-                params.context.bufnr = params.context.bufnr or vim.api.nvim_get_current_buf()
+                local bufnr = params.context.bufnr
+                if type(bufnr) == "function" then
+                    bufnr = bufnr()
+                end
+                if type(bufnr) ~= "number" then
+                    bufnr = vim.api.nvim_get_current_buf()
+                end
+                params.context.bufnr = bufnr
                 return old_request(self, method, params, callback)
             end
         end,
