@@ -1,3 +1,18 @@
+-- Normalize buffer numbers for LSP requests. Some plugins pass
+-- `vim.api.nvim_get_current_buf` directly which results in "bufnr:
+-- expected number, got function" when the LSP client makes a request.
+local client = require("vim.lsp.client")
+local orig_request = client.request
+client.request = function(self, method, params, handler, bufnr)
+    if type(bufnr) == "function" then
+        bufnr = bufnr()
+    end
+    if type(bufnr) ~= "number" then
+        bufnr = vim.api.nvim_get_current_buf()
+    end
+    return orig_request(self, method, params, handler, bufnr)
+end
+
 return {
     -- {
     --     "git@github.com:hrsh7th/cmp-nvim-lua.git",
@@ -9,9 +24,7 @@ return {
     -- {
     --     "hrsh7th/cmp-buffer",
     -- },
-    {
-        "hrsh7th/cmp-nvim-lsp",
-    },
+    { "hrsh7th/cmp-nvim-lsp" },
     {
         "L3MON4D3/LuaSnip",
         dependencies = {
