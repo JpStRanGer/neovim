@@ -6,6 +6,6 @@ return {
 		-- vim.keymap.set("n", "<leader>rn", ":IncRename ")
 		vim.keymap.set("n", "<leader>rn", function()
 			return ":IncRename " .. vim.fn.expand("<cword>")
-		end, { expr = true })
+		end, {desc = "rename symbol", expr = true } )
 	end,
 }

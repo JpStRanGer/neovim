@@ -1,38 +1,31 @@
-
-local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 return {
-    -- Mason package manager
     {
+
         "williamboman/mason.nvim",
         version = "1.*",
         config = function()
             require("mason").setup()
         end,
     },
-
-    -- Mason integration with lspconfig
     {
         "williamboman/mason-lspconfig.nvim",
         version = "1.*",
-        dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+        dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig", "hrsh7th/cmp-nvim-lsp" },
         config = function()
-            require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "clangd",
-                    "lua_ls",
-                    "pylsp",
-                    "bashls",
-                },
-                handlers = {
-                    -- Default handler
-                    function(server_name)
-                        require("lspconfig")[server_name].setup({
-                            capabilities = capabilities,
-                        })
-                    end,
+            local cmp_ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
+            local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-                    -- Custom handler for clangd with refactoring support
+            -- Fallback if "cmp-nvim-lsp" is not loaded corectly
+            if cmp_ok then
+                capabilities = cmp_lsp.default_capabilities(capabilities)
+            end
+    
+            require("mason-lspconfig").setup({
+                ensure_installed = { "clangd", "lua_ls", "pylsp", "bashls" },
+                handlers = {
+                    function(server_name)
+                        require("lspconfig")[server_name].setup({ capabilities = capabilities })
+                    end,
                     clangd = function()
                         require("lspconfig").clangd.setup({
                             capabilities = capabilities,
@@ -48,8 +41,6 @@ return {
                             },
                         })
                     end,
-
-                    -- Custom handler for Python LSP
                     pylsp = function()
                         require("lspconfig").pylsp.setup({
                             capabilities = capabilities,
@@ -71,38 +62,25 @@ return {
             })
         end,
     },
-
-    -- Core LSP settings and keymaps
     {
         "neovim/nvim-lspconfig",
         config = function()
             local builtin = require("telescope.builtin")
-
             vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover info" })
             vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "Go to Definition (Telescope)" })
             vim.keymap.set("n", "gp", vim.lsp.buf.declaration, { desc = "Go to Declaration" })
-
             vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
-            -- vim.keymap.set("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action (Visual)" })
-            
-            -- Visual mode code action for extracting if blocks
             vim.keymap.set("v", "<leader>ca", function()
                 vim.lsp.buf.code_action({
-                    context = {
-                        only = { "refactor.extract" },
-                    },
+                    context = { only = { "refactor.extract" } },
                     range = {
-                        ['start'] = vim.api.nvim_buf_get_mark(0, '<'),
-                        ['end'] = vim.api.nvim_buf_get_mark(0, '>'),
-                    }
+                        ["start"] = vim.api.nvim_buf_get_mark(0, "<"),
+                        ["end"] = vim.api.nvim_buf_get_mark(0, ">"),
+                    },
                 })
             end, { desc = "Code Action (Visual) - Extract Function" })
-
-
             vim.keymap.set("n", "<leader>sf", function()
-                builtin.lsp_document_symbols({
-                    symbols = { "Function", "Method" },
-                })
+                builtin.lsp_document_symbols({ symbols = { "Function", "Method" } })
             end, { desc = "Search Functions" })
         end,
     },
