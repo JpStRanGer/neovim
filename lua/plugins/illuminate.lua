@@ -63,9 +63,9 @@ return {
 			})
 
 			-- Example: Set illuminate highlight groups to use background color
-			vim.api.nvim_set_hl(0, "IlluminatedWordText", { bg = "#3c3836" })
-			vim.api.nvim_set_hl(0, "IlluminatedWordRead", { bg = "#3c3836" })
-			vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { bg = "#3c3836" })
+			vim.api.nvim_set_hl(0, "IlluminatedWordText", { bg = "#3d59a1" , fg = "#ffffff", underline = true, bold = true })
+			vim.api.nvim_set_hl(0, "IlluminatedWordRead", { bg = "#3d59a1", fg = "#ffffff", underline = true, bold = true})
+			vim.api.nvim_set_hl(0, "IlluminatedWordWrite", { bg = "#3d59a1", fg = "#ffffff", underline = true, bold = true })
 		end,
 	},
 }
