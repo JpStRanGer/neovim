@@ -19,9 +19,10 @@ A concrete v2 keymap structure is documented in:
 
 This config uses **none-ls as the single formatter owner**.
 
-- Use `<leader>gf` to format (normal or visual selection).
+- Use `<leader>gf` to format (normal, visual, or block-visual selection).
 - `none-ls` handles formatting tools (`clang_format`, `stylua`, `prettier`, `black`, `isort`).
 - `pylsp` formatting plugins are disabled to avoid double-format behavior.
+- If nothing happens, check `:LspInfo` and verify a `null-ls` client is attached for that buffer/filetype.
 
 ## Top 20 keymaps (daily use)
 
