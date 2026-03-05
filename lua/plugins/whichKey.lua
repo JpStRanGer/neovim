@@ -91,6 +91,10 @@ return {
 
 			{ "<leader>t", group = "Tools" },
 			{ "<leader>tt", desc = "Insert template" },
+
+			{ "<leader>u", group = "Undo / Redo" },
+			{ "<leader>uu", desc = "Undo" },
+			{ "<leader>ur", desc = "Redo" },
 			{ "<leader>U", desc = "Toggle Undotree" },
 
 			{ "ys", desc = "Add surround", mode = "n" },

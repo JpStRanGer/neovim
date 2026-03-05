@@ -52,5 +52,16 @@ This config uses **none-ls as the single formatter owner**.
 - `<leader>oo` → Open Ollama prompt
 - `<leader>oG` → Ollama code generation prompt
 - `<leader>s?` → Surround cheatsheet popup
+- `<leader>uu` → Undo
+- `<leader>ur` → Redo
 - `<C-n>` → Reveal current file in Neo-tree
 - `<C-t>` → Toggle terminal
+
+## Useful built-in Vim commands (no custom mapping needed)
+
+- `u` → undo
+- `<C-r>` (normal mode) → redo
+- In `/` or `:` prompt: `<C-r>{register}` inserts register content
+  - Example: `<C-r>"` inserts unnamed register
+  - Example: `<C-r>+` inserts system clipboard
+- In this config, cmdline `<C-v>` is mapped to `<C-r>+` for quick clipboard paste in search/command-line

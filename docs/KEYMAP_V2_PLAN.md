@@ -15,6 +15,7 @@ Målet er: lett å huske, lett å utvide, lett å lese i which-key.
 - `<leader>s` = **Symbols / Surround**
 - `<leader>d` = **Docs (generate comments)**
 - `<leader>h` = **Highlight / UI utility**
+- `<leader>u` = **Undo / Redo**
 - `<leader>U` = **Undo tree**
 - `<leader>?` = **which-key for current buffer**
 
@@ -44,6 +45,8 @@ Målet er: lett å huske, lett å utvide, lett å lese i which-key.
 | `<leader>oo` | Ollama prompt | aktiv |
 | `<leader>oG` | Ollama generate code prompt | aktiv |
 | `<leader>s?` | Surround cheatsheet | aktiv |
+| `<leader>uu` | Undo | aktiv |
+| `<leader>ur` | Redo | aktiv |
 | `<leader>U` | Toggle undotree | aktiv |
 
 ## Regler for nye keymaps
