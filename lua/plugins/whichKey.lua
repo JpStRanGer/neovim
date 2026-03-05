@@ -51,17 +51,46 @@ return {
 		preset = "classic",
 		delay = 200,
 		spec = {
+			{ "<leader>?", desc = "Buffer keymaps (which-key)" },
+
 			{ "<leader>c", group = "Code" },
+			{ "<leader>ca", desc = "Code actions" },
 			{ "<leader>cp", desc = "Pick color" },
+
 			{ "<leader>d", desc = "Generate doc comment" },
+
 			{ "<leader>f", group = "Find" },
-			{ "<leader>g", group = "Git/Format" },
+			{ "<leader>fb", desc = "Buffers" },
+			{ "<leader>fd", desc = "Line diagnostics" },
+			{ "<leader>ff", desc = "Find files" },
+			{ "<leader>fg", desc = "Live grep" },
+			{ "<leader>fh", desc = "Help tags" },
+			{ "<leader>fr", desc = "LSP references" },
+			{ "<leader>fs", desc = "Search word under cursor" },
+
+			{ "<leader>g", group = "Git / Format" },
+			{ "<leader>gB", desc = "Toggle inline blame" },
+			{ "<leader>gb", desc = "Blame line" },
+			{ "<leader>gf", desc = "Format buffer/selection" },
+
 			{ "<leader>h", desc = "Clear search highlight" },
+
 			{ "<leader>l", group = "LSP" },
+			{ "<leader>ld", desc = "LSP definitions" },
+
 			{ "<leader>o", group = "Ollama" },
-			{ "<leader>r", group = "Refactor/Rename" },
-			{ "<leader>s", group = "Search/Surround" },
+			{ "<leader>oG", desc = "Generate code (prompt)" },
+			{ "<leader>oo", desc = "Open Ollama prompt" },
+
+			{ "<leader>r", group = "Refactor / Rename" },
+			{ "<leader>rn", desc = "Rename symbol" },
+
+			{ "<leader>s", group = "Search / Symbols / Surround" },
+			{ "<leader>s?", desc = "Surround cheatsheet" },
+			{ "<leader>sf", desc = "Search functions/methods" },
+
 			{ "<leader>t", group = "Tools" },
+			{ "<leader>tt", desc = "Insert template" },
 			{ "<leader>U", desc = "Toggle Undotree" },
 
 			{ "ys", desc = "Add surround", mode = "n" },

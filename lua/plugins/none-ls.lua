@@ -4,19 +4,23 @@ return {
 		{
 			"<leader>gf",
 			function()
+				local format_opts = {
+					filter = function(client)
+						return client.name == "null-ls"
+					end,
+				}
+
 				if vim.fn.mode() == "v" or vim.fn.mode() == "V" then
-					vim.lsp.buf.format({
-						range = {
-							["start"] = vim.api.nvim_buf_get_mark(0, "<"),
-							["end"] = vim.api.nvim_buf_get_mark(0, ">"),
-						},
-					})
-				else
-					vim.lsp.buf.format()
+					format_opts.range = {
+						["start"] = vim.api.nvim_buf_get_mark(0, "<"),
+						["end"] = vim.api.nvim_buf_get_mark(0, ">"),
+					}
 				end
+
+				vim.lsp.buf.format(format_opts)
 			end,
 			mode = { "n", "v" },
-			desc = "Format buffer/selection",
+			desc = "Format via none-ls",
 		},
 	},
 	config = function()

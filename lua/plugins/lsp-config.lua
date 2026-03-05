@@ -32,6 +32,8 @@ return {
 				},
 			})
 
+			-- Formatter policy: formatting is handled by none-ls (<leader>gf).
+			-- Keep pylsp focused on diagnostics/intel to avoid double-format behavior.
 			vim.lsp.config("pylsp", {
 				capabilities = capabilities,
 				settings = {
@@ -39,7 +41,8 @@ return {
 						plugins = {
 							pycodestyle = { maxLineLength = 100 },
 							autopep8 = { enabled = false },
-							black = { enabled = true },
+							black = { enabled = false },
+							yapf = { enabled = false },
 							ruff = { enabled = true },
 							mypy = { enabled = true },
 							rope = { enabled = true },
