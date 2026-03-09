@@ -27,10 +27,6 @@ return {
             local cmp = require("cmp")
             local luasnip = require("luasnip")
 
-            vim.keymap.set("i", "<C-a>", function()
-                print("got <C-a>")
-            end)
-
             cmp.setup({
                 mapping = cmp.mapping.preset.insert({
                     -- Scroll docs

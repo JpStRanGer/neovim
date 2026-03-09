@@ -3,7 +3,7 @@ vim.cmd("syntax on")
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.autoread = true
-vim.opt.clipboard:append({"unnamed", "unnamedplus"})
+vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
 
 -- UI
 vim.opt.mouse = "a"
@@ -28,17 +28,8 @@ vim.wo.list = false
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Folding: open folds by default and show fold column
+-- Folding
 vim.opt.foldcolumn = "1"
 vim.opt.foldlevel = 99
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
-
--- Key mappings
-vim.keymap.set("n", "<C-t>", "<cmd>ToggleTerm<CR>", { noremap = true, silent = true })
-vim.keymap.set("t", "<Esc>", [[<C-\><C-n>]], { noremap = true })
-vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<CR>")
-vim.keymap.set("n", "<C-j>", "<cmd>wincmd j<CR>")
-vim.keymap.set("n", "<C-h>", "<cmd>wincmd h<CR>")
-vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<CR>")
-vim.keymap.set("n", "<leader>h", "<cmd>nohlsearch<CR>")
