@@ -52,7 +52,15 @@ Consequences — preserve these when editing LSP config:
 
 `lua/plugins/lsp-config.lua` uses the newer `vim.lsp.config(name, {...})` API (not `lspconfig.<name>.setup`) and relies on `mason-lspconfig`'s `automatic_enable = true` to enable servers. Capabilities are built once from `cmp_nvim_lsp.default_capabilities()` with `offsetEncoding` cleared (clangd compatibility) and reused across servers.
 
-Ensured servers: `clangd`, `lua_ls`, `pylsp`, `bashls`, `cmake`. `clangd` has a custom `--query-driver` list covering `arm-none-eabi-g++`, `xtensa-esp*-elf-g++`, `riscv32-esp-elf-g++` for embedded cross-compilers — do not drop these when editing its `cmd`.
+Ensured servers via Mason: `clangd`, `lua_ls`, `pylsp`, `bashls`. `clangd` has a custom `--query-driver` list covering `arm-none-eabi-g++`, `xtensa-esp*-elf-g++`, `riscv32-esp-elf-g++` for embedded cross-compilers — do not drop these when editing its `cmd`.
+
+`cmake-language-server` is intentionally NOT in `ensure_installed`. On Fedora 44 (Python 3.14) Mason fails to install it because the PyPI metadata caps Python at `<3.14`. Install it manually instead and let `vim.lsp.enable("cmake")` start it from PATH:
+
+```
+pip install --user --break-system-packages --ignore-requires-python 'pygls<2' cmake-language-server
+```
+
+(`pygls<2` is required because cmake-language-server 0.1.11 still uses the pygls 1.x API.) Do not re-add `cmake` to `ensure_installed`.
 
 ### Completion
 

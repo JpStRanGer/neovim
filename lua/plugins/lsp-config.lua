@@ -61,12 +61,18 @@ return {
 				settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 			})
 
+			-- cmake-language-server is installed outside Mason on this machine because
+			-- its PyPI metadata caps Python at <3.14 and Fedora ships 3.14. Install:
+			--   pip install --user --break-system-packages --ignore-requires-python \
+			--     'pygls<2' cmake-language-server
 			vim.lsp.config("cmake", { capabilities = capabilities })
 
 			require("mason-lspconfig").setup({
-				ensure_installed = { "clangd", "lua_ls", "pylsp", "bashls", "cmake" },
+				ensure_installed = { "clangd", "lua_ls", "pylsp", "bashls" },
 				automatic_enable = true,
 			})
+
+			vim.lsp.enable("cmake")
 		end,
 	},
 	{
