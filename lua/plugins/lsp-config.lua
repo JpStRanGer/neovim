@@ -7,7 +7,7 @@ return {
 	},
 	{
 		"mason-org/mason-lspconfig.nvim",
-		dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig", "hrsh7th/cmp-nvim-lsp" },
+		dependencies = { "mason-org/mason.nvim", "neovim/nvim-lspconfig", "hrsh7th/cmp-nvim-lsp" },
 		config = function()
 			local cmp_ok, cmp_lsp = pcall(require, "cmp_nvim_lsp")
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -27,8 +27,12 @@ return {
 					"--all-scopes-completion",
 					"--header-insertion=iwyu",
 					"--pch-storage=memory",
-					"--query-driver=/usr/bin/clang++*,/usr/bin/clang-*,/usr/bin/g++*,/usr/bin/c++*",
-					"--function-arg-placeholders=1",
+					"--query-driver=/usr/bin/clang++*,/usr/bin/clang-*,/usr/bin/g++*,/usr/bin/c++*,"
+						.. "**/arm-none-eabi-g++*,"
+						.. "**/xtensa-esp32-elf-g++*,"
+						.. "**/xtensa-esp*-elf-g++*,"
+						.. "**/riscv32-esp-elf-g++*",
+					"--function-arg-placeholders=0",
 				},
 			})
 
@@ -57,8 +61,10 @@ return {
 				settings = { Lua = { diagnostics = { globals = { "vim" } } } },
 			})
 
+			vim.lsp.config("cmake", { capabilities = capabilities })
+
 			require("mason-lspconfig").setup({
-				ensure_installed = { "clangd", "lua_ls", "pylsp", "bashls" },
+				ensure_installed = { "clangd", "lua_ls", "pylsp", "bashls", "cmake" },
 				automatic_enable = true,
 			})
 		end,

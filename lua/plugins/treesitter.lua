@@ -2,25 +2,17 @@ return {
 	{
 		"windwp/nvim-ts-autotag",
 		event = "VeryLazy",
-		config = function()
-			require("nvim-ts-autotag").setup()
-		end,
+		opts = {},
 	},
 	{
 		"nvim-treesitter/nvim-treesitter-context",
 		config = function()
 			require("treesitter-context").setup({
 				enable = true,
-				multiwindow = false,
-				max_lines = 0,
-				min_window_height = 0,
-				line_numbers = true,
 				multiline_threshold = 20,
 				trim_scope = "outer",
 				mode = "cursor",
 				separator = "─",
-				zindex = 20,
-				on_attach = nil,
 			})
 			vim.api.nvim_set_hl(0, "TreesitterContext", { bg = "#3c3836", bold = true })
 		end,
@@ -45,6 +37,7 @@ return {
 					"heex",
 					"javascript",
 					"html",
+					"htmldjango",
 				},
 				auto_install = true,
 				highlight = { enable = true },

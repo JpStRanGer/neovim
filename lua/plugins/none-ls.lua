@@ -1,5 +1,6 @@
 return {
 	"nvimtools/none-ls.nvim",
+	event = { "BufReadPre", "BufNewFile" },
 	keys = {
 		{
 			"<leader>gf",
@@ -52,9 +53,19 @@ return {
 			sources = {
 				null_ls.builtins.formatting.clang_format,
 				null_ls.builtins.formatting.stylua,
-				null_ls.builtins.formatting.prettier,
+				null_ls.builtins.formatting.prettier.with({
+					disabled_filetypes = { "htmldjango" },
+				}),
 				null_ls.builtins.formatting.black,
 				null_ls.builtins.formatting.isort,
+				null_ls.builtins.formatting.djlint.with({
+					filetypes = { "htmldjango" },
+					extra_args = { "--profile=jinja", "--indent=2" },
+				}),
+				null_ls.builtins.diagnostics.djlint.with({
+					filetypes = { "htmldjango" },
+					extra_args = { "--profile=jinja" },
+				}),
 			},
 		})
 	end,

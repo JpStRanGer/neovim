@@ -59,11 +59,17 @@ return {
 
 			{ "<leader>d", desc = "Generate doc comment" },
 
+			{ "<leader>e", group = "Embedded (C-\\ toggle term)" },
+			{ "<leader>eb", desc = "Bygg (PlatformIO)" },
+			{ "<leader>es", desc = "Seriell monitor (avslutt: C-a C-a C-x)" },
+			{ "<leader>eu", desc = "Flash (PlatformIO)" },
+
 			{ "<leader>f", group = "Find" },
 			{ "<leader>fb", desc = "Buffers" },
 			{ "<leader>fd", desc = "Line diagnostics" },
 			{ "<leader>ff", desc = "Find files" },
 			{ "<leader>fg", desc = "Live grep" },
+			{ "<leader>fgi", desc = "Live grep (filter by filetype)" },
 			{ "<leader>fh", desc = "Help tags" },
 			{ "<leader>fr", desc = "LSP references" },
 			{ "<leader>fs", desc = "Search word under cursor" },
