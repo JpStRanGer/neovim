@@ -1,76 +1,52 @@
--- return {
--- 	"catppuccin/nvim",
--- 	name = "catppuccin",
--- 	priority = 1000,
--- 	config = function()
--- 		vim.cmd.colorscheme("catppuccin")
--- 	end,
--- }
 return {
 	{
 		"rktjmp/lush.nvim",
 		name = "lush",
 		priority = 1000,
 	},
-	-- {
-	-- 	"metalelf0/jellybeans-nvim",
-	-- 	name = "jellybean",
-	-- 	priority = 1000,
-	-- 	config = function()
-	-- 		vim.cmd.colorscheme("jellybeans-nvim")
-	-- 	end,
-	-- },
 	{
 		"Mofiqul/vscode.nvim",
 		name = "vscode",
 		config = function()
 			local color = require("vscode.colors").get_colors()
 			require("vscode").setup({
-				-- Alternatively set style in setup
-				-- style = 'light'
-
-				-- Enable transparent background
 				transparent = true,
-
-				-- Enable italic comment
 				italic_comments = true,
-
-				-- Enable italic inlay type hints
 				italic_inlayhints = true,
-
-				-- Underline `@markup.link.*` variants
 				underline_links = true,
-
-				-- Disable nvim-tree background color
 				disable_nvimtree_bg = true,
-
-				-- Apply theme colors to terminal
 				terminal_colors = true,
-
-				-- Override colors (see ./lua/vscode/colors.lua)
 				color_overrides = {
 					vscLineNumber = "#FFFFFF",
 				},
-
-				-- Override highlight groups (see ./lua/vscode/theme.lua)
 				group_overrides = {
-					-- this supports the same val table as vim.api.nvim_set_hl
-					-- use colors from this colorscheme by requiring vscode.colors!
 					Cursor = { fg = color.vscDarkBlue, bg = color.vscLightGreen, bold = true },
 				},
 			})
-			-- require('vscode').load()
 
-			-- load the theme without affecting devicon colors.
 			vim.cmd.colorscheme("vscode")
 
-            -- If you are using lualine, you can also enable the provided theme:
-			require("lualine").setup({
-				options = {
-					-- ...
-					theme = "vscode",
-					-- ...
-				},
+			local function jinja_highlights()
+				local hl = vim.api.nvim_set_hl
+				hl(0, "@tag.delimiter.htmldjango", { fg = "#E5C07B", bold = true })
+				hl(0, "@punctuation.delimiter.htmldjango", { fg = "#E5C07B", bold = true })
+				hl(0, "@punctuation.bracket.htmldjango", { fg = "#E5C07B", bold = true })
+				hl(0, "@punctuation.special.htmldjango", { fg = "#E5C07B", bold = true })
+				hl(0, "@keyword.htmldjango", { fg = "#C586C0", italic = true })
+				hl(0, "@keyword.control.htmldjango", { fg = "#C586C0", italic = true })
+				hl(0, "@function.htmldjango", { fg = "#DCDCAA" })
+				hl(0, "@function.call.htmldjango", { fg = "#DCDCAA" })
+				hl(0, "@variable.htmldjango", { fg = "#9CDCFE" })
+				hl(0, "@variable.builtin.htmldjango", { fg = "#9CDCFE", italic = true })
+				hl(0, "@operator.htmldjango", { fg = "#D4D4D4" })
+				hl(0, "@comment.htmldjango", { fg = "#6A9955", italic = true })
+				hl(0, "@number.htmldjango", { fg = "#B5CEA8" })
+				hl(0, "@boolean.htmldjango", { fg = "#569CD6", bold = true })
+			end
+
+			jinja_highlights()
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				callback = jinja_highlights,
 			})
 		end,
 	},
