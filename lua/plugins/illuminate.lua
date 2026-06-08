@@ -2,7 +2,10 @@ return {
 	"RRethy/vim-illuminate",
 	config = function()
 		require("illuminate").configure({
-			providers = { "lsp", "treesitter", "regex" },
+			-- "treesitter" dropped: it crashes on C++ with the frozen
+			-- nvim-treesitter master (locals.lua :parent() on a nil node).
+			-- LSP (clangd) gives better symbol highlighting anyway; regex is the fallback.
+			providers = { "lsp", "regex" },
 			delay = 100,
 			filetypes_denylist = { "dirbuf", "dirvish", "fugitive" },
 			under_cursor = true,
