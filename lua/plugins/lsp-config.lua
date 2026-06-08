@@ -20,7 +20,9 @@ return {
 			vim.lsp.config("clangd", {
 				capabilities = capabilities,
 				cmd = {
-					"clangd",
+					-- cosmos: routes to clangd-in-container; other projects fall through
+					-- to the normal host clangd (see ~/.local/bin/cosmos-clangd-router)
+					"cosmos-clangd-router",
 					"--background-index",
 					"--clang-tidy",
 					"--completion-style=detailed",
