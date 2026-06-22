@@ -8,5 +8,6 @@ vim.filetype.add({
 		jinja = "htmldjango",
 		jinja2 = "htmldjango",
 		j2 = "htmldjango",
+		d2 = "d2",
 	},
 })
