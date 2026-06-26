@@ -3,6 +3,7 @@ vim.cmd("syntax on")
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.autoread = true
+vim.opt.updatetime = 1000   -- CursorHold etter 1s inaktivitet (default 4000); styrer disk-sjekk + illuminate/diagnostics-timing
 vim.opt.clipboard:append({ "unnamed", "unnamedplus" })
 
 -- UI
@@ -42,5 +43,25 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 		if vim.fn.isdirectory(dir) == 0 then
 			vim.fn.mkdir(dir, "p")
 		end
+	end,
+})
+
+-- Auto-reload: oppdag når en åpen fil er endret på disk (git pull, annen editor, build).
+-- `autoread` (over) gir tillatelsen; `checktime` gjør selve sjekken. checktime kjøres
+-- nesten aldri av seg selv i terminal, så vi trigger den på fokus + inaktivitet.
+-- Krever `set -g focus-events on` i tmux for at FocusGained skal nå hit gjennom tmux.
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	callback = function()
+		-- Ikke kjør i cmdline-modus eller i cmdline-window (':' / '/'), det avbryter input
+		if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+			vim.cmd("checktime")
+		end
+	end,
+})
+
+-- Si fra når en buffer faktisk ble lastet på nytt fra disk
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+	callback = function()
+		vim.notify("Fil endret på disk – lastet inn på nytt", vim.log.levels.WARN)
 	end,
 })
