@@ -82,6 +82,12 @@ return {
 			-- Knytt d2-parseren til d2-filtypen (filtypen settes i core/filetypes.lua).
 			vim.treesitter.language.register("d2", { "d2" })
 
+			-- main har ingen egen `jsonc`-parser (kun `json`); den gamle master-
+			-- branchen hadde det. Uten dette logger install() «skipping unsupported
+			-- language: jsonc». Bruk json-parseren for jsonc-filtypen — den parser
+			-- JSON-with-comments fint — og hold jsonc UTE av install-lista under.
+			vim.treesitter.language.register("json", { "jsonc" })
+
 			-- ── Installer parsere ───────────────────────────────────────────
 			-- Eksplisitt liste (main har ingen auto_install). Union av tidligere
 			-- ensure_installed + det auto_install faktisk hadde hentet på maskinen.
@@ -102,7 +108,6 @@ return {
 				"hyprlang",
 				"javascript",
 				"json",
-				"jsonc",
 				"lua",
 				"markdown",
 				"markdown_inline",
