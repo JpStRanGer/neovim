@@ -66,6 +66,20 @@ pip install --user --break-system-packages --ignore-requires-python 'pygls<2' cm
 
 `nvim-cmp` is configured in exactly one place: `lua/plugins/completions.lua`. `lsp-config.lua` must not call `cmp.setup()` again (doing so reintroduces a prior double-configuration bug). Capabilities flow one-way: cmp_nvim_lsp → lsp-config, never the reverse.
 
+### Treesitter (main branch)
+
+`lua/plugins/treesitter.lua` runs `nvim-treesitter` on the **`main`** branch (the nvim 0.11+ rewrite), migrated from the frozen `master` branch on 2026-06-26. The migration removed two stopgap shims that previously patched a `master`-only injection crash (`attempt to call method 'range' (a nil value)` at `treesitter.lua:196`, which took down treesitter-context a few seconds after opening a `.sh` with an injected/auto-installed language). `main` handles injections correctly, so the shims are gone — do not re-add them.
+
+Key differences from the old `master` setup, preserve these:
+
+- **No `require("nvim-treesitter.configs").setup{}`** — that API does not exist on `main`. Installation and features are separate.
+- **Parsers are installed explicitly** via `require("nvim-treesitter").install({...})` (no `auto_install`). The list is the union of the old `ensure_installed` plus what `auto_install` had actually fetched on this machine. `markdown_inline` is required for markdown fenced-code injections. When adding a language, add it to that list.
+- **Features are enabled per-filetype in a `FileType` autocmd**: `vim.treesitter.start()` (highlight, from nvim core) and `indentexpr` (only when TS is active). **Folding is owned by `nvim-ufo`** — do NOT set `foldexpr` here.
+- **Custom `d2` parser** is registered via `require("nvim-treesitter.parsers").d2 = {...}` both directly (so `install()` sees it) and in a `User TSUpdate` autocmd (so `:TSUpdate`/build re-knows it), then `vim.treesitter.language.register("d2", {"d2"})`. Highlight/injection queries for d2 are vendored under `queries/d2/`.
+- **Textobjects** (`nvim-treesitter-textobjects`, also `main`) uses the new function API, not a `keymaps` table: `require("...select").select_textobject(query, "textobjects")` and `require("...move").goto_next_start/goto_previous_start(query, "textobjects")`. The `as` / `]c` / `[c` maps target `@switch.outer` / `@case.label`, defined in `queries/cpp/textobjects.scm` (which starts with `; extends` so it augments rather than replaces the plugin's cpp textobjects).
+
+Parsers now live in `stdpath('data')/site/parser` (main's location), not `lazy/nvim-treesitter/parser`.
+
 ### Local/experimental plugins
 
 `lua/plugins/test.lua` loads the local plugin at `lua/myplugin/` only when `NVIM_ENABLE_LOCAL_TEST=1`. Keep this gate — the plugin is machine-specific and breaks on fresh clones.
