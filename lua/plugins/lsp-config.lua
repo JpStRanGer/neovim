@@ -17,26 +17,82 @@ return {
 				capabilities.offsetEncoding = nil
 			end
 
+			local clangd_cmd = {
+				-- cosmos: routes to clangd-in-container; other projects fall through
+				-- to the normal host clangd (see ~/.local/bin/cosmos-clangd-router)
+				"cosmos-clangd-router",
+				"--background-index",
+				"--clang-tidy",
+				"--completion-style=detailed",
+				"--all-scopes-completion",
+				"--header-insertion=iwyu",
+				"--pch-storage=memory",
+				"--query-driver=/usr/bin/clang++*,/usr/bin/clang-*,/usr/bin/g++*,/usr/bin/c++*,"
+					.. "**/arm-none-eabi-g++*,"
+					.. "**/xtensa-esp32-elf-g++*,"
+					.. "**/xtensa-esp*-elf-g++*,"
+					.. "**/riscv32-esp-elf-g++*",
+				"--function-arg-placeholders=0",
+			}
+
+			-- The payment-terminal/examples are standalone C++23 teaching files.
+			-- They must NOT be served by the container clangd (Rocky-9 GCC 11, no
+			-- <format>) — only by a host clangd rooted at examples/. With one clangd
+			-- config the worktree-rooted container client (its root is an ancestor)
+			-- AND the examples-rooted one would both attach to the same buffer, and
+			-- the container one re-introduces the false <format> errors. So we split
+			-- into two configs whose root_dir functions are mutually exclusive by
+			-- path: example files → clangd_examples (host), everything else → clangd.
+			local examples_pat = "/payment%-terminal/examples/"
+
 			vim.lsp.config("clangd", {
 				capabilities = capabilities,
-				cmd = {
-					-- cosmos: routes to clangd-in-container; other projects fall through
-					-- to the normal host clangd (see ~/.local/bin/cosmos-clangd-router)
-					"cosmos-clangd-router",
-					"--background-index",
-					"--clang-tidy",
-					"--completion-style=detailed",
-					"--all-scopes-completion",
-					"--header-insertion=iwyu",
-					"--pch-storage=memory",
-					"--query-driver=/usr/bin/clang++*,/usr/bin/clang-*,/usr/bin/g++*,/usr/bin/c++*,"
-						.. "**/arm-none-eabi-g++*,"
-						.. "**/xtensa-esp32-elf-g++*,"
-						.. "**/xtensa-esp*-elf-g++*,"
-						.. "**/riscv32-esp-elf-g++*",
-					"--function-arg-placeholders=0",
-				},
+				cmd = clangd_cmd,
+				-- Skip example files here (clangd_examples handles them). Returning
+				-- without calling on_dir means this client does not attach.
+				root_dir = function(bufnr, on_dir)
+					local fname = vim.api.nvim_buf_get_name(bufnr)
+					if fname:match(examples_pat) then
+						return
+					end
+					on_dir(vim.fs.root(fname, {
+						".clangd",
+						".clang-tidy",
+						".clang-format",
+						"compile_commands.json",
+						"compile_flags.txt",
+						"configure.ac",
+						".git",
+					}) or vim.fs.dirname(fname))
+				end,
 			})
+
+			-- Dedicated HOST clangd for the standalone examples only. It must call
+			-- the host clangd BINARY directly (not cosmos-clangd-router): nvim
+			-- launches the server with cwd = the editor's cwd (usually the cosmos
+			-- worktree), NOT root_dir, so the router would still pick the container.
+			-- Host clangd (Mason, GCC 16) has <format>; examples/.clangd forces
+			-- -std=c++23.
+			local host_clangd = vim.fn.expand("$HOME/.local/share/nvim/mason/bin/clangd")
+			if vim.fn.executable(host_clangd) == 0 then
+				host_clangd = "clangd"
+			end
+			local examples_cmd = vim.deepcopy(clangd_cmd)
+			examples_cmd[1] = host_clangd
+
+			vim.lsp.config("clangd_examples", {
+				capabilities = capabilities,
+				cmd = examples_cmd,
+				filetypes = { "c", "cpp" },
+				root_dir = function(bufnr, on_dir)
+					local fname = vim.api.nvim_buf_get_name(bufnr)
+					local root = fname:match("^(.*/payment%-terminal/examples)/")
+					if root then
+						on_dir(root)
+					end
+				end,
+			})
+			vim.lsp.enable("clangd_examples")
 
 			-- Formatter policy: formatting is handled by none-ls (<leader>gf).
 			-- Keep pylsp focused on diagnostics/intel to avoid double-format behavior.
