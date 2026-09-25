@@ -33,6 +33,7 @@ Målet er: lett å huske, lett å utvide, lett å lese i which-key.
 | `<leader>fr` | LSP references | aktiv |
 | `<leader>fd` | Diagnostikk under cursor | aktiv |
 | `<leader>ld` | LSP definitions | aktiv |
+| `<leader>li` | Toggle inlay hints | aktiv |
 | `<leader>ca` | Code actions (normal + visual extract) | aktiv |
 | `<leader>sf` | Finn funksjoner/metoder i fil | aktiv |
 | `<leader>rn` | Rename symbol | aktiv |

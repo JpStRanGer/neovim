@@ -83,6 +83,7 @@ return {
 
 			{ "<leader>l", group = "LSP" },
 			{ "<leader>ld", desc = "LSP definitions" },
+			{ "<leader>li", desc = "Toggle inlay hints" },
 
 			{ "<leader>o", group = "Ollama" },
 			{ "<leader>oG", desc = "Generate code (prompt)" },

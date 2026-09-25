@@ -131,6 +131,17 @@ return {
 			})
 
 			vim.lsp.enable("cmake")
+
+			-- Inlay hints on by default for any client that advertises support;
+			-- <leader>li still toggles them off per-buffer when they get noisy.
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					if client and client.server_capabilities.inlayHintProvider then
+						vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+					end
+				end,
+			})
 		end,
 	},
 	{
@@ -140,6 +151,14 @@ return {
 			{ "gd", function() require("telescope.builtin").lsp_definitions() end, desc = "LSP Definitions" },
 			{ "gp", vim.lsp.buf.declaration, desc = "LSP Declaration" },
 			{ "<leader>ca", vim.lsp.buf.code_action, desc = "Code Actions" },
+			{
+				"<leader>li",
+				function()
+					local bufnr = vim.api.nvim_get_current_buf()
+					vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = bufnr }), { bufnr = bufnr })
+				end,
+				desc = "Toggle inlay hints",
+			},
 			{
 				"<leader>ca",
 				function()
