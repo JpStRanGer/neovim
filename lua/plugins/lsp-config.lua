@@ -142,6 +142,18 @@ return {
 					end
 				end,
 			})
+
+			-- After an on-disk reload (see checktime in vim-options.lua) the hint extmarks
+			-- stay at their old positions while the text shifts, so hints land mid-identifier
+			-- and inside strings. Toggling off/on forces a fresh request.
+			vim.api.nvim_create_autocmd("FileChangedShellPost", {
+				callback = function(args)
+					if vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }) then
+						vim.lsp.inlay_hint.enable(false, { bufnr = args.buf })
+						vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+					end
+				end,
+			})
 		end,
 	},
 	{
