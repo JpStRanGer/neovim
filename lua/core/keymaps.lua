@@ -10,6 +10,10 @@ map("n", "<leader>h", "<cmd>nohlsearch<CR>", { desc = "Clear search highlight" }
 map("n", "<leader>uu", "u", { desc = "Undo" })
 map("n", "<leader>ur", "<C-r>", { desc = "Redo" })
 
+-- Mouse side buttons: walk the jumplist like <C-o>/<C-i>
+map("n", "<X1Mouse>", "<C-o>", { desc = "Jump back (mouse back button)" })
+map("n", "<X2Mouse>", "<C-i>", { desc = "Jump forward (mouse forward button)" })
+
 -- Cmdline helper: paste system clipboard in / or : prompt
 -- Native Vim register paste is still <C-r>{register} (example: <C-r>").
 map("c", "<C-v>", "<C-r>+", { noremap = true })
